@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="src/SpiderMem.API/SpiderMem.API.csproj" Id="e27a5a50-0d73-4015-a01d-1239f90d0f2d" />
+  <Project Path="src/SpiderMem.Application/SpiderMem.Application.csproj" Id="e253bb14-cfe4-4a2b-b39e-cf23056e6300" />
+  <Project Path="src/SpiderMem.Domain/SpiderMem.Domain.csproj" Id="0092a4d2-fd9a-477a-94a0-360e14ee3421" />
+  <Project Path="src/SpiderMem.Infrastructure/SpiderMem.Infrastructure.csproj" Id="156b1b25-a9c0-48d6-8277-d2e79b9c668d" />
+</Solution>

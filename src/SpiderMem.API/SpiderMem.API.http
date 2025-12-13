@@ -1,0 +1,6 @@
+@SpiderMem.API_HostAddress = http://localhost:5218
+
+GET {{SpiderMem.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

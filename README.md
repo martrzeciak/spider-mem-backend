@@ -17,7 +17,7 @@ cd spider-mem-backend
 
 ---
 
-## 2. Install .NET SDK (automatic)
+## 2. Install .NET SDK (PowerShell)
 
 ```powershell
 .\install-sdk.ps1

@@ -96,6 +96,7 @@ docker compose up -d
 
 ❌ "SDK not found"
 → .\install-sdk.ps1 (then restart terminal)
+```
 
 ---
 

@@ -66,7 +66,7 @@ dotnet watch run
 
 ---
 
-## 5. Docker Fallback (no SDK needed)
+## 5. Docker
 
 ```bash
 docker compose up -d

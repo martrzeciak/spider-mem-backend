@@ -1,6 +1,8 @@
-﻿namespace SpiderMem.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace SpiderMem.Domain.Entities;
+
+public class User : IdentityUser
 {
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<Meme> Memes { get; set; } = new List<Meme>();

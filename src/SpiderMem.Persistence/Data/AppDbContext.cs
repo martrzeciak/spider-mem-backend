@@ -6,7 +6,7 @@ using SpiderMem.Domain.Entities;
 namespace SpiderMem.Persistence.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options)
-    : IdentityDbContext<User, IdentityRole, string>(options)
+    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Meme> Memes { get; set; }
     public DbSet<Comment> Comments { get; set; }

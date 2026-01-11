@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpiderMem.Domain\SpiderMem.Domain.csproj" />
+    <ProjectReference Include="..\SpiderMem.Persistence\SpiderMem.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>

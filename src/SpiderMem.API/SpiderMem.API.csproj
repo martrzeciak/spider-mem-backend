@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SpiderMem.Application\SpiderMem.Application.csproj" />
     <ProjectReference Include="..\SpiderMem.Persistence\SpiderMem.Persistence.csproj" />
   </ItemGroup>
 

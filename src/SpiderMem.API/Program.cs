@@ -1,10 +1,12 @@
 using Scalar.AspNetCore;
 using SpiderMem.API.Extensions;
+using SpiderMem.Application;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SpiderMem.Application.Queries.GetMemes.GetMemesQuery>());
 builder.Services.AddControllers();
 builder.Services.AddApiServices(builder.Configuration);
 

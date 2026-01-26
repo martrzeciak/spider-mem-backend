@@ -187,11 +187,16 @@ namespace SpiderMem.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MemeId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Comments");
                 });
@@ -240,9 +245,14 @@ namespace SpiderMem.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Memes");
                 });
@@ -402,14 +412,18 @@ namespace SpiderMem.Persistence.Migrations
                     b.HasOne("SpiderMem.Domain.Entities.Meme", "Meme")
                         .WithMany("Comments")
                         .HasForeignKey("MemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SpiderMem.Domain.Entities.User", "User")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SpiderMem.Domain.Entities.User", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Meme");
 
@@ -438,10 +452,14 @@ namespace SpiderMem.Persistence.Migrations
             modelBuilder.Entity("SpiderMem.Domain.Entities.Meme", b =>
                 {
                     b.HasOne("SpiderMem.Domain.Entities.User", "User")
-                        .WithMany("Memes")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SpiderMem.Domain.Entities.User", null)
+                        .WithMany("Memes")
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });

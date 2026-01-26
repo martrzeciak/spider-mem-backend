@@ -6,6 +6,7 @@ using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Queries.GetMemes;
 using SpiderMem.Application.Queries.GetMemeDetails;
 using SpiderMem.Application.Queries.GetMemesByTag;
+using SpiderMem.Application.Commands.CreateMeme;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SpiderMem.API.Controllers;
@@ -41,12 +42,10 @@ public class MemeController : BaseApiController
             }
         ));
     }
-    /*
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<MemeDto>> CreateMeme(CreateMemeCommand command)
     {
         return HandleResult(await Mediator.Send(command));
     }
-    */
 }

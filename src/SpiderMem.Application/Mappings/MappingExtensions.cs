@@ -12,7 +12,7 @@ public static class MappingExtensions
         new(tag.Id, tag.Name);
 
     public static CommentDto ToDto(this Comment comment) =>
-        new(comment.Id, comment.Content, comment.CreatedAt, comment.UserId, comment.User?.UserName ?? "Unknown");
+        new(comment.Id, comment.Content, comment.CreatedAt, comment.UserId, comment.MemeId, comment.User.UserName);
 
     public static LikeDto ToDto(this Like like) =>
         new(like.Id, like.UserId, like.CreatedAt);

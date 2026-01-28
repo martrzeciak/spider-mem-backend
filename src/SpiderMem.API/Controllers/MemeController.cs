@@ -7,6 +7,7 @@ using SpiderMem.Application.Queries.GetMemes;
 using SpiderMem.Application.Queries.GetMemeDetails;
 using SpiderMem.Application.Queries.GetMemesByTag;
 using SpiderMem.Application.Commands.CreateMeme;
+using SpiderMem.Application.Commands.ToggleLike;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SpiderMem.API.Controllers;
@@ -42,10 +43,17 @@ public class MemeController : BaseApiController
             }
         ));
     }
+
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<MemeDto>> CreateMeme(CreateMemeCommand command)
     {
         return HandleResult(await Mediator.Send(command));
+    }
+
+    [HttpPost("{Id:guid}/toggle")]
+    public async Task<ActionResult<int>> ToggleLike(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new ToggleLikeCommand(id)));
     }
 }

@@ -7,5 +7,4 @@ public class CreateCommentCommand : IRequest<Result<CommentDto>>
 {
         public Guid MemeId { get; set; }
         public string Content { get; set; } = null!;
-    
 }

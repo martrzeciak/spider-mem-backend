@@ -6,7 +6,6 @@ using SpiderMem.Persistence.Data;
 namespace SpiderMem.Application.Queries.GetTags;
 
 public class GetTagsQueryHandler : IRequestHandler<GetTagsQuery, Result<List<TagDto>>>{
-    private const int PageSize = 10;
 
     private readonly AppDbContext _context;
 

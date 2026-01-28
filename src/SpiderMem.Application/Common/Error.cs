@@ -3,6 +3,7 @@
     public static readonly Error None = new(string.Empty, string.Empty);
     public static readonly Error NullValue = new("Error.NullValue", "The specified result value is null.");
     public static readonly Error Unauthorized = new("Auth.Unauthorized", "User is not authenticated");
+    public static readonly Error ImageSendingError = new("Auth.ImageSendingError", "Error image");
     public static Error NotFound(string name) => new("NotFound", $"{name} not found");
     public static Error AlreadyUsed(string name) => new("AlreadyUsed", $"{name} is already used");
     public static readonly Error DatabaseError = new("Database.Error", "Failed to save data");

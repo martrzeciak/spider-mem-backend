@@ -5,6 +5,7 @@ using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Mappings;
 using SpiderMem.Domain.Entities;
 using SpiderMem.Persistence.Data;
+using SpiderMem.Application.Interfaces;
 
 namespace SpiderMem.Application.Commands.CreateMeme;
 
@@ -13,13 +14,16 @@ public class CreateMemeCommandHandler
 {
     private readonly AppDbContext _context;
     private readonly IUserAccessor _userAccessor;
+    private readonly IImageService _imageService;
 
     public CreateMemeCommandHandler(
         AppDbContext context,
-        IUserAccessor userAccessor)
+        IUserAccessor userAccessor,
+        IImageService imageService)
     {
         _context = context;
         _userAccessor = userAccessor;
+        _imageService = imageService;
     }
 
     public async Task<Result<MemeDto>> Handle(
@@ -42,7 +46,6 @@ public class CreateMemeCommandHandler
 
         var meme = new Meme
         {
-            Id = Guid.NewGuid(),
             Title = request.Title,
             ImageUrl = request.ImageUrl,
             UserId = user.Id,
@@ -52,8 +55,8 @@ public class CreateMemeCommandHandler
 
         _context.Memes.Add(meme);
 
-        var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-        if (!result)
+        var saved = await _context.SaveChangesAsync(cancellationToken) > 0;
+        if (!saved)
             return Result.Failure<MemeDto>(Error.DatabaseError);
 
         return Result.Success(meme.ToDto());

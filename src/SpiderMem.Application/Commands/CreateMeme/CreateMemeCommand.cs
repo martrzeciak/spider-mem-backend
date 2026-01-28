@@ -1,5 +1,6 @@
 using MediatR;
 using SpiderMem.Application.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace SpiderMem.Application.Commands.CreateMeme;
 

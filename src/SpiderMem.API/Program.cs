@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using MediatR;
+using SpiderMem.Application.Interfaces;
+using SpiderMem.API.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,9 +50,13 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SpiderMem.Application.Queries.GetMemes.GetMemesQuery>());
 builder.Services.AddControllers();
 builder.Services.AddApiServices(builder.Configuration);
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings")
+);
 
 
 

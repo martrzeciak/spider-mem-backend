@@ -13,13 +13,6 @@ namespace SpiderMem.API.Controllers;
 [Authorize]
 public class CommentController : BaseApiController
 {
-    private readonly IMediator _mediator;
-
-    public CommentController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost]
     public async Task<ActionResult<CommentDto>> CreateComment(CreateCommentCommand command)
     {

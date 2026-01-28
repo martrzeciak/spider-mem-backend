@@ -6,6 +6,7 @@
     public static readonly Error ImageSendingError = new("Auth.ImageSendingError", "Error image");
     public static Error NotFound(string name) => new("NotFound", $"{name} not found");
     public static Error AlreadyUsed(string name) => new("AlreadyUsed", $"{name} is already used");
+    public static Error AlreadyExists(string name) => new("AlreadyExists", $"{name} is already used");
     public static readonly Error DatabaseError = new("Database.Error", "Failed to save data");
 
     public Error(string code, string message)

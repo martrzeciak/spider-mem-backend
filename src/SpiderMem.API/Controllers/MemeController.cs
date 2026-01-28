@@ -55,6 +55,12 @@ public class MemeController : BaseApiController
         ));
     }
 
+    [HttpPost("{Id:guid}/toggle")]
+    public async Task<ActionResult<int>> ToggleLike(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new ToggleLikeCommand(id)));
+    }
+    
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<MemeDto>> CreateMeme(CreateMemeCommand command)
@@ -62,11 +68,6 @@ public class MemeController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpPost("{Id:guid}/toggle")]
-    public async Task<ActionResult<int>> ToggleLike(Guid id)
-    {
-        return HandleResult(await Mediator.Send(new ToggleLikeCommand(id)));
-    }
 
     [HttpPost("create")]
     [Consumes("multipart/form-data")]

@@ -14,16 +14,13 @@ public class CreateMemeCommandHandler
 {
     private readonly AppDbContext _context;
     private readonly IUserAccessor _userAccessor;
-    private readonly IImageService _imageService;
 
     public CreateMemeCommandHandler(
         AppDbContext context,
-        IUserAccessor userAccessor,
-        IImageService imageService)
+        IUserAccessor userAccessor)
     {
         _context = context;
         _userAccessor = userAccessor;
-        _imageService = imageService;
     }
 
     public async Task<Result<MemeDto>> Handle(

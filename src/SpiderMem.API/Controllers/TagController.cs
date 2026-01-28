@@ -3,6 +3,7 @@ using SpiderMem.API.Extensions;
 using SpiderMem.Application.Common;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Queries.GetTags;
+using SpiderMem.Application.Commands.CreateTag;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SpiderMem.API.Controllers;
@@ -18,5 +19,12 @@ public class TagController : BaseApiController
                 new GetTagsQuery{}
             )
         );
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<ActionResult<MemeDto>> CreateTag(CreateTagCommand command)
+    {
+        return HandleResult(await Mediator.Send(command));
     }
 }

@@ -1,11 +1,12 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SpiderMem.Application.Common;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Persistence.Data;
 
 namespace SpiderMem.Application.Queries.GetMemes;
 
-public class GetMemesQueryHandler : IRequestHandler<GetMemesQuery, Result<List<MemeDto>>>{
+public class GetMemesQueryHandler : IRequestHandler<GetMemesQuery, Result<PagedList<MemeDto>>>{
     private const int PageSize = 10;
 
     private readonly AppDbContext _context;
@@ -15,14 +16,11 @@ public class GetMemesQueryHandler : IRequestHandler<GetMemesQuery, Result<List<M
         _context = context;
     }
 
-    public async Task<Result<List<MemeDto>>> Handle(GetMemesQuery request, CancellationToken cancellationToken){
-        var page = request.Page < 1 ? 1 : request.Page;
+    public async Task<Result<PagedList<MemeDto>>> Handle(GetMemesQuery request, CancellationToken cancellationToken){
 
-        var memes = await _context.Memes
+        var memes = _context.Memes
             .AsNoTracking()
             .OrderByDescending(m => m.CreatedAt)
-            .Skip((page - 1) * PageSize)
-            .Take(PageSize)
             .Select(m => new MemeDto(
                 m.Id,
                 m.Title,
@@ -47,8 +45,10 @@ public class GetMemesQueryHandler : IRequestHandler<GetMemesQuery, Result<List<M
                     .ToList(),
                 m.Likes.Count
             ))
-            .ToListAsync(cancellationToken);
+            .AsQueryable();
 
-        return Result<List<MemeDto>>.Success(memes);
+        return Result.Success(await PagedList<MemeDto>
+            .CreateAsync(memes, request.MemeParams.PageNumber, 
+                request.MemeParams.PageSize));
     }
 }

@@ -1,6 +1,4 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SpiderMem.API.Extensions;
 using SpiderMem.Application.Common;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Queries.GetMemes;
@@ -8,30 +6,20 @@ using SpiderMem.Application.Queries.GetMemeDetails;
 using SpiderMem.Application.Queries.GetMemesByTag;
 using SpiderMem.Application.Commands.CreateMeme;
 using SpiderMem.Application.Commands.ToggleLike;
-using SpiderMem.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using SpiderMem.API.Services;
+using SpiderMem.Application.Interfaces;
 
 namespace SpiderMem.API.Controllers;
 
-[Route("api/[controller]")]
-public class MemeController : BaseApiController
+public class MemeController(IImageService imageService) : BaseApiController
 {
-    private readonly IImageService _imageService;
-    private readonly IMediator _mediator;
-
-    public MemeController(IImageService imageService, IMediator mediator)
-    {
-        _imageService = imageService;
-        _mediator = mediator;
-    }
-
-
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<List<MemeDto>>> GetMemes([FromQuery] int page = 1){
-        return HandleResult(
+    public async Task<ActionResult<PagedList<MemeDto>>> GetMemes([FromQuery] MemeParams memeParams){
+        return HandlePagedResult(
             await Mediator.Send(
-                new GetMemesQuery { Page = page }
+                new GetMemesQuery { MemeParams = memeParams }
             )
         );
     }
@@ -46,21 +34,22 @@ public class MemeController : BaseApiController
 
     [AllowAnonymous]
     [HttpGet("tag/{tagId:guid}")]
-    public async Task<ActionResult<IEnumerable<MemeDto>>> GetMemesByTag(Guid tagId, [FromQuery] int page = 1){
-        return HandleResult(await Mediator.Send(
+    public async Task<ActionResult<PagedList<MemeDto>>> GetMemesByTag(Guid tagId, [FromQuery] MemeParams memeParams){
+        return HandlePagedResult(await Mediator.Send(
             new GetMemesByTagQuery{
                 TagId = tagId,
-                Page = page
+                MemeParams = memeParams
             }
         ));
     }
 
+    [Authorize]
     [HttpPost("{Id:guid}/toggle")]
     public async Task<ActionResult<int>> ToggleLike(Guid id)
     {
         return HandleResult(await Mediator.Send(new ToggleLikeCommand(id)));
     }
-    
+
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<MemeDto>> CreateMeme(CreateMemeCommand command)
@@ -73,7 +62,7 @@ public class MemeController : BaseApiController
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> Create([FromForm] AddMemeDto dto)
     {
-        var uploadResult = await _imageService.AddImageAsync(dto.ImageUrl, "memes");
+        var uploadResult = await imageService.AddImageAsync(dto.ImageUrl, "memes");
         if (uploadResult.Error != null)
             return BadRequest(uploadResult.Error.Message);
 
@@ -84,7 +73,7 @@ public class MemeController : BaseApiController
             TagIds = dto.Tags1 ?? new List<Guid>()
         };
 
-        var result = await _mediator.Send(command);
+        var result = await Mediator.Send(command);
         if (!result.IsSuccess) return BadRequest(result.Error);
 
         return Ok(result.Value);

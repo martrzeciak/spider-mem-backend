@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SpiderMem.API.Extensions;
-using SpiderMem.Application.Common;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Queries.GetTags;
 using SpiderMem.Application.Commands.CreateTag;
@@ -8,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SpiderMem.API.Controllers;
 
-[Route("api/[controller]")]
 public class TagController : BaseApiController
 {
     [AllowAnonymous]

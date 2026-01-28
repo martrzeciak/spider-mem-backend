@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Mappings;
 using SpiderMem.Persistence.Data;
+using SpiderMem.Application.Common;
 
 namespace SpiderMem.Application.Queries.GetMemesByTag;
 
-public class GetMemesByTagQueryHandler : IRequestHandler<GetMemesByTagQuery, Result<List<MemeDto>>>
+public class GetMemesByTagQueryHandler : IRequestHandler<GetMemesByTagQuery, Result<PagedList<MemeDto>>>
 {
-    private const int PageSize = 10;
     private readonly AppDbContext _context;
 
     public GetMemesByTagQueryHandler(AppDbContext context)
@@ -16,27 +16,42 @@ public class GetMemesByTagQueryHandler : IRequestHandler<GetMemesByTagQuery, Res
         _context = context;
     }
 
-    public async Task<Result<List<MemeDto>>> Handle(
+    public async Task<Result<PagedList<MemeDto>>> Handle(
         GetMemesByTagQuery request,
         CancellationToken cancellationToken)
     {
-        var page = request.Page < 1 ? 1 : request.Page;
-
-        var memes = await _context.Memes
+        var memes = _context.Memes
             .AsNoTracking()
             .Where(m => m.Tags.Any(t => t.Id == request.TagId))
-            .Include(m => m.User)
-            .Include(m => m.Tags)
-            .Include(m => m.Comments)
-                .ThenInclude(c => c.User)
-            .Include(m => m.Likes)
             .OrderByDescending(m => m.CreatedAt)
-            .Skip((page - 1) * PageSize)
-            .Take(PageSize)
-            .ToListAsync(cancellationToken);
+            .Select(m => new MemeDto(
+                m.Id,
+                m.Title,
+                m.ImageUrl,
+                m.CreatedAt,
+                m.User.Id,
+                m.User.UserName,
+                m.Tags
+                    .Select(mt => new TagDto(
+                        mt.Id,
+                        mt.Name))
+                    .ToList(),
+                m.Comments
+                    .OrderBy(c => c.CreatedAt)
+                    .Select(c => new CommentDto(
+                        c.Id,
+                        c.Content,
+                        c.CreatedAt,
+                        c.User.Id,
+                        c.MemeId,
+                        c.User.UserName))
+                    .ToList(),
+                m.Likes.Count
+            ))
+            .AsQueryable();
 
-        var memeDtos = memes.ToDtos().ToList();
-
-        return Result<List<MemeDto>>.Success(memeDtos);
+        return Result.Success(await PagedList<MemeDto>
+            .CreateAsync(memes, request.MemeParams.PageNumber, 
+                request.MemeParams.PageSize));
     }
 }

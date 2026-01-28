@@ -1,15 +1,10 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SpiderMem.API.Extensions;
-using SpiderMem.Application.Common;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Commands.CreateComment;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SpiderMem.API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 [Authorize]
 public class CommentController : BaseApiController
 {

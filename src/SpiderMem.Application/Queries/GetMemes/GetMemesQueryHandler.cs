@@ -42,6 +42,7 @@ public class GetMemesQueryHandler : IRequestHandler<GetMemesQuery, Result<List<M
                         c.Content,
                         c.CreatedAt,
                         c.User.Id,
+                        c.MemeId,
                         c.User.UserName))
                     .ToList(),
                 m.Likes.Count

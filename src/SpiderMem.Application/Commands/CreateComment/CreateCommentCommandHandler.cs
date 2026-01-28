@@ -31,22 +31,24 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 
         var meme = await _context.Memes
             .Include(m => m.Comments)
-            .FirstOrDefaultAsync(m => m.Id == request.CommentDto.MemeId, cancellationToken);
+            .FirstOrDefaultAsync(m => m.Id == request.MemeId, cancellationToken);
 
         if (meme == null)
             return Result.Failure<CommentDto>(Error.NotFound("Meme"));
 
         var comment = new Comment
         {
-            Id = Guid.NewGuid(),
-            Content = request.CommentDto.Content,
+            Content = request.Content,
             CreatedAt = DateTime.UtcNow,
             UserId = user.Id,
             User = user
         };
 
         meme.Comments.Add(comment);
-        await _context.SaveChangesAsync(cancellationToken);
+
+        var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+        if (!result)
+            return Result.Failure<CommentDto>(Error.DatabaseError);
 
         return Result.Success(comment.ToDto());
     }

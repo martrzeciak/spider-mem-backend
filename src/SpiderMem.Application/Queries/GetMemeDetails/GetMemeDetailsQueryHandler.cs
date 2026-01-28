@@ -1,8 +1,8 @@
-
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpiderMem.Application.DTOs;
 using SpiderMem.Persistence.Data;
+using SpiderMem.Application.Common;
 
 namespace SpiderMem.Application.Queries.GetMemeDetails;
 
@@ -41,6 +41,7 @@ public class GetMemeDetailsQueryHandler : IRequestHandler<GetMemeDetailsQuery, R
                         c.Content,
                         c.CreatedAt,
                         c.UserId,
+                        c.MemeId,
                         c.User!.UserName!
                     ))
                     .ToList(),
@@ -48,7 +49,7 @@ public class GetMemeDetailsQueryHandler : IRequestHandler<GetMemeDetailsQuery, R
             ))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (meme is null) return Result<MemeDto>.Failure("Meme not found");
+        if (meme is null) return Result.Failure<MemeDto>(Error.NotFound("Meme"));
 
         return Result<MemeDto>.Success(meme);
     }

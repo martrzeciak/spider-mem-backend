@@ -18,6 +18,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Comment>()
+        .Property(c => c.Id)
+        .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<Comment>()
             .HasOne(c => c.Meme)
             .WithMany(m => m.Comments)
             .HasForeignKey(c => c.MemeId)

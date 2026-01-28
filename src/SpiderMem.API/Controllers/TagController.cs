@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SpiderMem.API.Extensions;
 using SpiderMem.Application.Common;

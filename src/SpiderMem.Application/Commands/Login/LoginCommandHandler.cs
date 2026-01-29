@@ -34,8 +34,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<AuthResp
     public async Task<Result<AuthResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.LoginDto.Email, cancellationToken);
-        if (user == null)
-            return Result.Failure<AuthResponseDto>(new Error("Auth.UserNotFound", "Użytkownik nie istnieje."));
+        if (string.IsNullOrEmpty(request.LoginDto.Email))
+            return Result.Failure<AuthResponseDto>(new Error("Auth.EmailIsEmpty", "Podaj email."));
+
+        if (string.IsNullOrWhiteSpace(request.LoginDto.Password))
+            return Result.Failure<AuthResponseDto>(new Error("Auth.PasswordIsEmpty", "Podaj hasło."));
 
         var hashedInputPassword = HashPassword(request.LoginDto.Password);
         if (user.PasswordHash != hashedInputPassword)

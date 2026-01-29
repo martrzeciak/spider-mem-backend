@@ -7,7 +7,6 @@ using SpiderMem.Application.Queries.GetMemesByTag;
 using SpiderMem.Application.Commands.CreateMeme;
 using SpiderMem.Application.Commands.ToggleLike;
 using Microsoft.AspNetCore.Authorization;
-using SpiderMem.API.Services;
 using SpiderMem.Application.Interfaces;
 
 namespace SpiderMem.API.Controllers;

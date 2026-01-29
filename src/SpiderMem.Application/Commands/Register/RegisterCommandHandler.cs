@@ -21,13 +21,26 @@ namespace SpiderMem.Application.Commands.Auth
 
         public async Task<Result<UserDto>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            // Sprawdź czy użytkownik już istnieje
+            if (string.IsNullOrWhiteSpace(request.UserName))
+            {
+                return Result.Failure<UserDto>(new Error("Auth.UserNameIsEmpty", "Podaj nazwę użytkownika."));
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return Result.Failure<UserDto>(new Error("Auth.EmailIsEmpty", "Podaj adres email."));
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                return Result.Failure<UserDto>(new Error("Auth.PasswordIsEmpty", "Podaj hasło."));
+            }
+
             if (await _context.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email, cancellationToken))
             {
                 return Result.Failure<UserDto>(Error.AlreadyUsed("User"));
             }
 
-            // Stwórz użytkownika
             var user = new User
             {
                 Id = Guid.NewGuid(),

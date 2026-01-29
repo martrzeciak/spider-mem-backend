@@ -41,9 +41,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<AuthResp
         if (string.IsNullOrWhiteSpace(request.LoginDto.Password))
             return Result.Failure<AuthResponseDto>(new Error("Auth.PasswordIsEmpty", "Podaj hasło."));
 
-        if (await _context.Users.AnyAsync(u => u.Email == request.LoginDto.Email))
-            return Result.Failure<AuthResponseDto>(new Error("Auth.EmailIsTaken", "Użytkownik o podanym emailu już istnieje."));
-
         var hashedInputPassword = HashPassword(request.LoginDto.Password);
         if (user.PasswordHash != hashedInputPassword)
             return Result.Failure<AuthResponseDto>(new Error("Auth.WrongPassword", "Niepoprawne hasło."));

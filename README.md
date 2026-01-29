@@ -45,7 +45,23 @@ dotnet --version
 
 ---
 
-## 4. Run the Application
+## 4. Run migration
+
+### From Visual Studio
+
+```powershell
+  Update-Database -p SpiderMem.Persistence -s SpiderMem.API
+```
+
+### From Visual Studio Code
+
+```powershell
+  dotnet ef database update --project SpiderMem.Persistence --startup-project SpiderMem.API
+```
+
+---
+
+## 5. Run the Application
 
 ### Option A: From solution root (specify project)
 
@@ -60,9 +76,12 @@ cd src/SpiderMem.API
 dotnet watch run
 ```
 
-✅ Backend will start at:
+Backend will start at:
 
 * [https://localhost:5001](https://localhost:5001)
+
+Docs:
+* [https://localhost:5001/scalar]](https://localhost:5001/scalar)
 
 ---
 

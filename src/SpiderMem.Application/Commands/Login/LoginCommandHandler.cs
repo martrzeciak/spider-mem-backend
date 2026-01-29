@@ -1,14 +1,15 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SpiderMem.Application.DTOs;
 using SpiderMem.Application.Common;
+using SpiderMem.Application.DTOs;
 using SpiderMem.Persistence.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 
 
 namespace SpiderMem.Application.Commands.Auth;
@@ -39,6 +40,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<AuthResp
 
         if (string.IsNullOrWhiteSpace(request.LoginDto.Password))
             return Result.Failure<AuthResponseDto>(new Error("Auth.PasswordIsEmpty", "Podaj hasło."));
+
+        if (await _context.Users.AnyAsync(u => u.Email == request.LoginDto.Email))
+            return Result.Failure<AuthResponseDto>(new Error("Auth.EmailIsTaken", "Użytkownik o podanym emailu już istnieje."));
 
         var hashedInputPassword = HashPassword(request.LoginDto.Password);
         if (user.PasswordHash != hashedInputPassword)

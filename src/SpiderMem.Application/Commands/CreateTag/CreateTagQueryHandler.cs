@@ -36,9 +36,10 @@ public class CreateTagCommandHandler
         var existingTag = await _context.Tags
             .AnyAsync(t => t.Name == request.Name, cancellationToken);
 
-        if (existingTag)
-            return Result.Failure<TagDto>(Error.AlreadyExists("Tag"));
-
+        if (existingTag){
+            var oldtag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == request.Name);
+            return Result.Success(oldtag.ToDto());
+        }
 
         var tag = new Tag
         {

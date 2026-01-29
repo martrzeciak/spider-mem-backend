@@ -4,6 +4,6 @@ namespace SpiderMem.Application.DTOs;
 
 public record AddMemeDto(
     string Title,
-    IFormFile ImageUrl,
-    List<Guid>? Tags1
+    List<Guid>? Tags1,
+    IFormFile ImageUrl = default!
 );

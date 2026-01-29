@@ -56,10 +56,9 @@ public class MemeController(IImageService imageService) : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-
     [HttpPost("create")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> Create([FromForm] AddMemeDto dto)
+    public async Task<ActionResult> Create([FromForm] AddMemeDto dto)
     {
         var uploadResult = await imageService.AddImageAsync(dto.ImageUrl, "memes");
         if (uploadResult.Error != null)
